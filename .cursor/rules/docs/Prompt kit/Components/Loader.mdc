@@ -1,0 +1,63 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# prompt-kit
+Loader
+------
+
+A loading component with multiple variants to indicate processing states and provide visual feedback to users during wait times.
+
+Examples
+--------
+
+### Basic Loader
+
+Showcasing all available loader variants with default settings.
+
+### Loader Sizes
+
+Customize the size of any loader variant with predefined size options.
+
+### Loader With Text
+
+Some loader variants support displaying custom text while loading.
+
+Loading......
+
+loading-dots
+
+Installation
+------------
+
+```
+pnpm dlx shadcn@lastest add "https://prompt-kit.com/c/loader.json"
+```
+
+
+_Note: If you are using Tailwind CSS v4, you may have to grab the keyframes and add them to your global.css file manually. Check manual installation for more details._
+
+Component API
+-------------
+
+### Loader
+
+
+
+* Prop: variant
+  * Type: "circular" | "classic" | "pulse" | "pulse-dot" | "dots" | "typing" | "wave" | "bars" | "terminal" | "text-blink" | "text-shimmer" | "loading-dots"
+  * Default: "circular"
+  * Description: The visual style of the loader
+* Prop: size
+  * Type: "sm" | "md" | "lg"
+  * Default: "md"
+  * Description: The size of the loader
+* Prop: text
+  * Type: string
+  * Default: 
+  * Description: Text to display (for supported variants)
+* Prop: className
+  * Type: string
+  * Default: 
+  * Description: Additional CSS classes

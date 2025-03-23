@@ -1,0 +1,29 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# prompt-kit
+Installation
+------------
+
+Once shadcn/ui is set up, you can install **prompt-kit** components using the **shadcn CLI**.
+
+Using the shadcn CLI
+--------------------
+
+```
+pnpm dlx shadcn@latest add "https://prompt-kit.com/c/[COMPONENT].json"
+```
+
+
+Usage
+-----
+
+After installation, import and start using the components in your project:
+
+```
+import { PromptInput } from "@/components/ui/prompt-input";
+```
+
+

@@ -1,0 +1,207 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# prompt-kit
+Markdown
+--------
+
+A component for rendering Markdown content with support for GitHub Flavored Markdown (GFM) and custom component styling.
+
+Examples
+--------
+
+### Basic Markdown
+
+Render basic Markdown with support for bold, italics, lists, code blocks and more.
+
+Markdown Example
+----------------
+
+This is a **bold text** and this is an _italic text_.
+
+Lists
+-----
+
+### Unordered List
+
+*   Item 1
+*   Item 2
+*   Item 3
+
+### Ordered List
+
+1.  First item
+2.  Second item
+3.  Third item
+
+Links and Images
+----------------
+
+[Visit Prompt Kit](https://prompt-kit.com/)
+
+Code
+----
+
+Inline code example.
+
+```
+// Code block example
+function greet(name) {
+  return `Hello, ${name}!`;
+}
+
+```
+
+
+### Markdown with Custom Components
+
+You can customize how different Markdown elements are rendered by providing custom components.
+
+Custom Components Example
+-------------------------
+
+Styled Headings
+---------------
+
+### This is a custom styled H3
+
+Custom Links
+------------
+
+[Click me to toggle theme](#)
+
+Custom Blockquotes
+------------------
+
+> This is a custom styled blockquote with multiple lines of text.
+
+Custom Lists
+------------
+
+*   First item with custom styling
+*   Second item with custom styling
+*   Third item with custom styling
+
+Installation
+------------
+
+```
+pnpm dlx shadcn@lastest add "https://prompt-kit.com/c/markdown.json"
+```
+
+
+Component API
+-------------
+
+### Markdown
+
+
+
+* Prop: children
+  * Type: string
+  * Default: 
+  * Description: Markdown content to render
+* Prop: className
+  * Type: string
+  * Default: 
+  * Description: Additional CSS classes
+* Prop: components
+  * Type: Partial<Components>
+  * Default: INITIAL_COMPONENTS
+  * Description: Custom components to override default rendering
+* Prop: ...props
+  * Type: React.ComponentProps<typeof ReactMarkdown>
+  * Default: 
+  * Description: All other ReactMarkdown props
+
+
+Performance Optimization
+------------------------
+
+The Markdown component employs advanced memoization techniques to optimize rendering performance, especially in streaming AI response scenarios. This approach is crucial when rendering chat interfaces where new tokens are continuously streamed.
+
+### How Memoization Works
+
+Our implementation:
+
+1.  Splits Markdown content into discrete semantic blocks using the `marked` library
+2.  Memoizes each block individually with React's `memo`
+3.  Only re-renders blocks that have actually changed when new content arrives
+4.  Preserves already rendered blocks to prevent unnecessary re-parsing and re-rendering
+
+This pattern significantly improves performance in chat applications by preventing the entire message history from re-rendering with each new token, which becomes increasingly important as conversations grow longer.
+
+For AI chat interfaces using streaming responses, always provide a unique `id` prop (typically the message ID) to ensure proper block caching:
+
+```
+<Markdown id={message.id}>{message.content}</Markdown>
+```
+
+
+This memoization implementation is based on the [Vercel AI SDK Cookbook](https://sdk.vercel.ai/cookbook/next/markdown-chatbot-with-memoization) with enhancements for better React integration.
+
+Customizing Components
+----------------------
+
+You can customize how different Markdown elements are rendered by providing a `components` prop. This is an object where keys are HTML element names and values are React components.
+
+```
+const customComponents = {
+  h1: ({ children }) => <h1 className="text-2xl font-bold text-blue-500">{children}</h1>,
+  a: ({ href, children }) => <a href={href} className="text-purple-500 underline">{children}</a>,
+  // ... other components
+}
+
+<Markdown components={customComponents}>{markdownContent}</Markdown>
+
+```
+
+
+Supported Markdown Features
+---------------------------
+
+The Markdown component uses [react-markdown](https://github.com/remarkjs/react-markdown) with [remark-gfm](https://github.com/remarkjs/remark-gfm) to support GitHub Flavored Markdown, which includes:
+
+*   Tables
+*   Strikethrough
+*   Tasklists
+*   Literal URLs
+*   Footnotes
+
+Additionally, the component includes built-in code block highlighting through the `CodeBlock` component.
+
+Styling with Tailwind Typography
+--------------------------------
+
+For the best typography styling experience, we recommend using the [@tailwindcss/typography](https://github.com/tailwindlabs/tailwindcss-typography) plugin. This plugin provides a set of `prose` classes that add beautiful typographic defaults to your markdown content.
+
+```
+npm install -D @tailwindcss/typography
+```
+
+
+When using the Markdown component with Tailwind Typography, you can apply the `prose` class:
+
+```
+<Markdown className="prose dark:prose-invert">{markdownContent}</Markdown>
+```
+
+
+### Handling Code Blocks
+
+As you've seen in our examples, code blocks within prose content can sometimes cause styling conflicts. The Tailwind Typography plugin provides a `not-prose` class to exclude elements from prose styling:
+
+```
+<article className="prose">
+  <h1>My Content</h1>
+  <p>Regular content with prose styling...</p>
+
+  <div className="not-prose">
+    <!-- Code blocks or other elements that shouldn't inherit prose styles -->
+  </div>
+
+</article>
+
+```

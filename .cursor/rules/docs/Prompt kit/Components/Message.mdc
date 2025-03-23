@@ -1,0 +1,118 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# prompt-kit
+Message
+-------
+
+A component for displaying messages in a conversation interface, with support for avatars, markdown content, and interactive actions.
+
+
+### Message with Markdown
+
+The `markdown` prop enables rendering content as [Markdown](https://www.prompt-kit.com/docs/markdown), perfect for rich text formatting in messages.
+
+Hello World!
+------------
+
+This message supports **bold text**, _italics_, and other Markdown features:
+
+*   Bullet points
+*   Code blocks
+*   [Links](https://example.com/)
+
+```
+// Even code with syntax highlighting
+function hello() {
+  return "world";
+}
+
+```
+
+
+### Message with Actions
+
+You can use `MessageActions` and `MessageAction` to add interactive elements to your messages.
+
+
+
+Installation
+------------
+
+```
+pnpm dlx shadcn@lastest add "https://prompt-kit.com/c/message.json"
+```
+
+
+Component API
+-------------
+
+### Message
+
+
+|Prop     |Type                           |Default|Description               |
+|---------|-------------------------------|-------|--------------------------|
+|children |React.ReactNode                |       |Child components to render|
+|className|string                         |       |Additional CSS classes    |
+|...props |React.HTMLProps<HTMLDivElement>|       |All other div props       |
+
+
+### MessageAvatar
+
+
+|Prop     |Type  |Default|Description                           |
+|---------|------|-------|--------------------------------------|
+|src      |string|       |URL of the avatar image               |
+|alt      |string|       |Alt text for the avatar image         |
+|fallback |string|       |Text to display if image fails to load|
+|delayMs  |number|       |Delay before showing fallback (in ms) |
+|className|string|       |Additional CSS classes                |
+
+
+### MessageContent
+
+
+|Prop     |Type                           |Default|Description                          |
+|---------|-------------------------------|-------|-------------------------------------|
+|children |React.ReactNode                |       |Content to display in the message    |
+|markdown |boolean                        |false  |Whether to render content as markdown|
+|className|string                         |       |Additional CSS classes               |
+|...props |React.HTMLProps<HTMLDivElement>|       |All other div props                  |
+
+
+### MessageActions
+
+
+|Prop     |Type                           |Default|Description               |
+|---------|-------------------------------|-------|--------------------------|
+|children |React.ReactNode                |       |Child components to render|
+|className|string                         |       |Additional CSS classes    |
+|...props |React.HTMLProps<HTMLDivElement>|       |All other div props       |
+
+
+### MessageAction
+
+
+
+* Prop: tooltip
+  * Type: React.ReactNode
+  * Default: 
+  * Description: Content to show in the tooltip
+* Prop: children
+  * Type: React.ReactNode
+  * Default: 
+  * Description: Child component to trigger the tooltip
+* Prop: className
+  * Type: string
+  * Default: 
+  * Description: Additional CSS classes for the tooltip
+* Prop: side
+  * Type: "top" | "bottom" | "left" | "right"
+  * Default: "top"
+  * Description: Position of the tooltip relative to the trigger
+* Prop: ...props
+  * Type: React.ComponentProps<typeof Tooltip>
+  * Default: 
+  * Description: All other Tooltip component props

@@ -1,0 +1,72 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# prompt-kit
+Promp Suggestion
+----------------
+
+A component for implementing interactive prompt suggestions in AI interfaces. The PromptSuggestion component offers two distinct modes:
+
+*   **Normal Mode**: Renders clickable, pill-shaped buttons ideal for suggesting quick prompts in chat interfaces
+*   **Highlight Mode**: Provides text highlighting to highlight a part of the suggestion
+
+Examples
+--------
+
+### Basic Usage
+
+Display clickable prompt suggestions that users can select to populate an input field. You can easily use it with the [PromptInput](https://www.prompt-kit.com/docs/prompt-input) component.
+
+### Highlighted Prompt Suggestions
+
+Implement prompt suggestions with search term highlighting. It's perfect to showcase a list of related prompts.
+
+### Complete Chat Interface
+
+Build a full-featured chat interface with dynamic prompt suggestions that switch between both modes.
+
+Installation
+------------
+
+```
+pnpm dlx shadcn@latest add "https://prompt-kit.com/c/prompt-suggestion.json"
+```
+
+
+Component API
+-------------
+
+### PromptSuggestion
+
+
+
+* Prop: children
+  * Type: React.ReactNode
+  * Default: 
+  * Description: Content to display in the suggestion button
+* Prop: variant
+  * Type: "default" | "destructive" | "outline" | "ghost"
+  * Default: "outline"
+  * Description: Visual variant of the button (normal mode) or "ghost" (highlight mode)
+* Prop: size
+  * Type: "default" | "sm" | "lg" | "icon"
+  * Default: "lg"
+  * Description: Size of the button (normal mode) or "sm" (highlight mode)
+* Prop: highlight
+  * Type: string
+  * Default: undefined
+  * Description: When provided, enables highlight mode and highlights this text within children
+* Prop: className
+  * Type: string
+  * Default: 
+  * Description: Additional CSS classes
+* Prop: ...props
+  * Type: ButtonHTMLAttributes
+  * Default: 
+  * Description: All other button HTML attributes (including onClick)
+
+
+[Loader](https://www.prompt-kit.com/docs/loader)
+[Response Stream](https://www.prompt-kit.com/docs/response-stream)
