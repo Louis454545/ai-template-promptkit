@@ -1,6 +1,11 @@
 ---
 description: 
 globs: 
+alwaysApply: false
+---
+---
+description: 
+globs: 
 alwaysApply: true
 ---
 ## Context
@@ -12,3 +17,4 @@ alwaysApply: true
 - You must use Shadcn UI for components.
 - You must use Tailwind CSS for styling.
 - You must install any ShadcnUI missing component with `pnpm dlx shadcn@latest add [component]`
+- Don't use the deprecated components toast but use sonner: 'pnpm dlx shadcn@latest add sonner' 
