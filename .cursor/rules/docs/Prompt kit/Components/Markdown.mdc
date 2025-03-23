@@ -39,7 +39,7 @@ Lists
 Links and Images
 ----------------
 
-[Visit Prompt Kit](https://prompt-kit.com/)
+[Visit Prompt Kit](mdc:https:/prompt-kit.com)
 
 Code
 ----
@@ -70,7 +70,7 @@ Styled Headings
 Custom Links
 ------------
 
-[Click me to toggle theme](#)
+[Click me to toggle theme](mdc:#)
 
 Custom Blockquotes
 ------------------
@@ -140,7 +140,7 @@ For AI chat interfaces using streaming responses, always provide a unique `id` p
 ```
 
 
-This memoization implementation is based on the [Vercel AI SDK Cookbook](https://sdk.vercel.ai/cookbook/next/markdown-chatbot-with-memoization) with enhancements for better React integration.
+This memoization implementation is based on the [Vercel AI SDK Cookbook](mdc:https:/sdk.vercel.ai/cookbook/next/markdown-chatbot-with-memoization) with enhancements for better React integration.
 
 Customizing Components
 ----------------------
@@ -162,7 +162,7 @@ const customComponents = {
 Supported Markdown Features
 ---------------------------
 
-The Markdown component uses [react-markdown](https://github.com/remarkjs/react-markdown) with [remark-gfm](https://github.com/remarkjs/remark-gfm) to support GitHub Flavored Markdown, which includes:
+The Markdown component uses [react-markdown](mdc:https:/github.com/remarkjs/react-markdown) with [remark-gfm](mdc:https:/github.com/remarkjs/remark-gfm) to support GitHub Flavored Markdown, which includes:
 
 *   Tables
 *   Strikethrough
@@ -175,7 +175,7 @@ Additionally, the component includes built-in code block highlighting through th
 Styling with Tailwind Typography
 --------------------------------
 
-For the best typography styling experience, we recommend using the [@tailwindcss/typography](https://github.com/tailwindlabs/tailwindcss-typography) plugin. This plugin provides a set of `prose` classes that add beautiful typographic defaults to your markdown content.
+For the best typography styling experience, we recommend using the [@tailwindcss/typography](mdc:https:/github.com/tailwindlabs/tailwindcss-typography) plugin. This plugin provides a set of `prose` classes that add beautiful typographic defaults to your markdown content.
 
 ```
 npm install -D @tailwindcss/typography

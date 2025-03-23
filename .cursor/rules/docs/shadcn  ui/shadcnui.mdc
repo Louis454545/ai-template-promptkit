@@ -1,13 +1,9 @@
 ---
 description: 
 globs: 
-alwaysApply: false
----
----
-description: 
-globs: 
 alwaysApply: true
 ---
+
 ## Context
 * Shadcn/ui is already installed and init
 * We use Shadcn/UI to style our application.
