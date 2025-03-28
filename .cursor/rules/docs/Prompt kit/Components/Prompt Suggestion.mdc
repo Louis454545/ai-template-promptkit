@@ -17,15 +17,280 @@ Examples
 
 ### Basic Usage
 
-Display clickable prompt suggestions that users can select to populate an input field. You can easily use it with the [PromptInput](https://www.prompt-kit.com/docs/prompt-input) component.
+Display clickable prompt suggestions that users can select to populate an input field. You can easily use it with the [PromptInput](mdc:https:/www.prompt-kit.com/docs/prompt-input) component.
+```
+"use client"
+
+import {
+  PromptInput,
+  PromptInputActions,
+  PromptInputTextarea,
+} from "@/components/prompt-kit/prompt-input"
+import { PromptSuggestion } from "@/components/prompt-kit/prompt-suggestion"
+import { Button } from "@/components/ui/button"
+import { ArrowUpIcon } from "lucide-react"
+import { useState } from "react"
+
+/**
+ * Example showing PromptSuggestion with PromptInput
+ */
+export function PromptSuggestionBasic() {
+  const [inputValue, setInputValue] = useState("")
+
+  const handleSend = () => {
+    if (inputValue.trim()) {
+      console.log("Sending:", inputValue)
+      setInputValue("")
+    }
+  }
+
+  return (
+    <div className="flex w-full flex-col space-y-4">
+      <div className="flex flex-wrap gap-2">
+        <PromptSuggestion onClick={() => setInputValue("Tell me a joke")}>
+          Tell me a joke
+        </PromptSuggestion>
+
+        <PromptSuggestion onClick={() => setInputValue("How does this work?")}>
+          How does this work?
+        </PromptSuggestion>
+
+        <PromptSuggestion
+          onClick={() => setInputValue("Generate an image of a cat")}
+        >
+          Generate an image of a cat
+        </PromptSuggestion>
+
+        <PromptSuggestion onClick={() => setInputValue("Write a poem")}>
+          Write a poem
+        </PromptSuggestion>
+        <PromptSuggestion
+          onClick={() => setInputValue("Code a React component")}
+        >
+          Code a React component
+        </PromptSuggestion>
+      </div>
+
+      <PromptInput
+        className="border-input bg-background border shadow-xs"
+        value={inputValue}
+        onValueChange={setInputValue}
+        onSubmit={handleSend}
+      >
+        <PromptInputTextarea placeholder="Type a message or click a suggestion..." />
+        <PromptInputActions className="justify-end">
+          <Button
+            size="sm"
+            className="size-9 cursor-pointer rounded-full"
+            onClick={handleSend}
+            disabled={!inputValue.trim()}
+            aria-label="Send"
+          >
+            <ArrowUpIcon className="h-4 w-4" />
+          </Button>
+        </PromptInputActions>
+      </PromptInput>
+    </div>
+  )
+}
+
+```
 
 ### Highlighted Prompt Suggestions
 
 Implement prompt suggestions with search term highlighting. It's perfect to showcase a list of related prompts.
+```
+import { PromptSuggestion } from "@/components/prompt-kit/prompt-suggestion"
 
+export function PromptSuggestionHighlight() {
+  const searchTerm = "how to"
+
+  return (
+    <div className="w-full space-y-2">
+      <div className="w-full space-y-1">
+        {howToPrompts.map((prompt) => (
+          <PromptSuggestion key={prompt} highlight={searchTerm}>
+            {prompt}
+          </PromptSuggestion>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+const howToPrompts = [
+  "How to create a React component",
+  "How to optimize website performance",
+  "How to implement dark mode in a web app",
+  "How to use CSS Grid effectively",
+  "How to fetch data from an API in JavaScript",
+  "How to build a REST API with Node.js",
+  "How to deploy a Next.js application",
+  "How to implement authentication in a web app",
+]
+
+```
 ### Complete Chat Interface
 
 Build a full-featured chat interface with dynamic prompt suggestions that switch between both modes.
+```
+"use client"
+
+import {
+  PromptInput,
+  PromptInputActions,
+  PromptInputTextarea,
+} from "@/components/prompt-kit/prompt-input"
+import { PromptSuggestion } from "@/components/prompt-kit/prompt-suggestion"
+import { Button } from "@/components/ui/button"
+import { ArrowUpIcon, BrainIcon } from "lucide-react"
+import { useState } from "react"
+
+export function PromptSuggestionVariants() {
+  const [inputValue, setInputValue] = useState("")
+  const [activeCategory, setActiveCategory] = useState("")
+
+  const handleSend = () => {
+    if (inputValue.trim()) {
+      console.log("Sending:", inputValue)
+      setInputValue("")
+      setActiveCategory("")
+    }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault()
+      handleSend()
+    }
+  }
+
+  const handlePromptInputValueChange = (value: string) => {
+    setInputValue(value)
+    // Clear active category when typing something different
+    if (value.trim() === "") {
+      setActiveCategory("")
+    }
+  }
+
+  // Get suggestions based on active category
+  const activeCategoryData = suggestionGroups.find(
+    (group) => group.label === activeCategory
+  )
+
+  // Determine which suggestions to show
+  const showCategorySuggestions = activeCategory !== ""
+
+  return (
+    <div className="flex w-full flex-col space-y-4">
+      <PromptInput
+        className="border-input bg-background border shadow-xs"
+        value={inputValue}
+        onValueChange={handlePromptInputValueChange}
+        onSubmit={handleSend}
+      >
+        <PromptInputTextarea
+          placeholder="Ask anything..."
+          className="min-h-[44px]"
+          onKeyDown={handleKeyDown}
+        />
+        <PromptInputActions className="justify-end">
+          <Button
+            size="sm"
+            className="h-9 w-9 rounded-full"
+            onClick={handleSend}
+            disabled={!inputValue.trim()}
+          >
+            <ArrowUpIcon className="h-4 w-4" />
+          </Button>
+        </PromptInputActions>
+      </PromptInput>
+
+      <div className="relative flex w-full flex-col items-center justify-center space-y-2">
+        <div className="absolute top-0 left-0 h-[70px] w-full">
+          {showCategorySuggestions ? (
+            <div className="flex w-full flex-col space-y-1">
+              {activeCategoryData?.items.map((suggestion) => (
+                <PromptSuggestion
+                  key={suggestion}
+                  highlight={activeCategoryData.highlight}
+                  onClick={() => {
+                    setInputValue(suggestion)
+                    // Optional: auto-send
+                    // handleSend()
+                  }}
+                >
+                  {suggestion}
+                </PromptSuggestion>
+              ))}
+            </div>
+          ) : (
+            <div className="relative flex w-full flex-wrap items-stretch justify-start gap-2">
+              {suggestionGroups.map((suggestion) => (
+                <PromptSuggestion
+                  key={suggestion.label}
+                  onClick={() => {
+                    setActiveCategory(suggestion.label)
+                    setInputValue("") // Clear input when selecting a category
+                  }}
+                  className="capitalize"
+                >
+                  <BrainIcon className="mr-2 h-4 w-4" />
+                  {suggestion.label}
+                </PromptSuggestion>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const suggestionGroups = [
+  {
+    label: "Summary",
+    highlight: "Summarize",
+    items: [
+      "Summarize a document",
+      "Summarize a video",
+      "Summarize a podcast",
+      "Summarize a book",
+    ],
+  },
+  {
+    label: "Code",
+    highlight: "Help me",
+    items: [
+      "Help me write React components",
+      "Help me debug code",
+      "Help me learn Python",
+      "Help me learn SQL",
+    ],
+  },
+  {
+    label: "Design",
+    highlight: "Design",
+    items: [
+      "Design a small logo",
+      "Design a hero section",
+      "Design a landing page",
+      "Design a social media post",
+    ],
+  },
+  {
+    label: "Research",
+    highlight: "Research",
+    items: [
+      "Research the best practices for SEO",
+      "Research the best running shoes",
+      "Research the best restaurants in Paris",
+      "Research the best AI tools",
+    ],
+  },
+]
+
+```
 
 Installation
 ------------
@@ -68,5 +333,5 @@ Component API
   * Description: All other button HTML attributes (including onClick)
 
 
-[Loader](https://www.prompt-kit.com/docs/loader)
-[Response Stream](https://www.prompt-kit.com/docs/response-stream)
+[Loader](mdc:https:/www.prompt-kit.com/docs/loader)
+[Response Stream](mdc:https:/www.prompt-kit.com/docs/response-stream)

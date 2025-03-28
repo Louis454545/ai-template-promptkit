@@ -16,26 +16,241 @@ Examples
 
 The most basic implementation of the Reasoning component with collapsible content.
 
-I calculated the best color balance
+```
+"use client"
+
+import {
+  Reasoning,
+  ReasoningContent,
+  ReasoningResponse,
+  ReasoningTrigger,
+} from "@/components/prompt-kit/reasoning"
+
+export function ReasoningBasic() {
+  const reasoningText = `I calculated the best color balance for the image. The image is a photo of a car, and the color balance is the best color balance for the image. The color balance is the best color balance for the image.
+  1. First, we consider the color of the car
+  2. Then, we consider the color of the sky
+  3. Finally, we consider the color of the grass
+  4. We then calculate the best color balance for the image
+  5. We then apply the best color balance to the image
+  6. We then save the image
+  `
+
+  return (
+    <Reasoning>
+      <div className="flex w-full flex-col gap-3">
+        <p className="text-base">I calculated the best color balance</p>
+        <ReasoningTrigger>Show reasoning</ReasoningTrigger>
+        <ReasoningContent className="ml-2 border-l-2 border-l-slate-200 px-2 pb-1 dark:border-l-slate-700">
+          <ReasoningResponse text={reasoningText} />
+        </ReasoningContent>
+      </div>
+    </Reasoning>
+  )
+}
+
+```
 
 ### With AI Response
 
 Combine with the ResponseStream component to show streaming AI reasoning content.
 
-The square root of 144 is 12.
+```
+"use client"
+
+import {
+  Reasoning,
+  ReasoningContent,
+  ReasoningResponse,
+  ReasoningTrigger,
+} from "@/components/prompt-kit/reasoning"
+import { Button } from "@/components/ui/button"
+import { useEffect, useState } from "react"
+
+// Simulated AI reasoning stream
+const simulateStream = async function* () {
+  const reasoning = `I need to find the square root of 144.
+
+Step 1: Break down the problem. 
+- I need to find a number that, when multiplied by itself, equals 144.
+
+Step 2: Try some values.
+- 10² = 100 (too small)
+- 13² = 169 (too large)
+- 12² = 144 (perfect!)
+
+Step 3: Verify the answer.
+- 12 × 12 = 144 ✓
+
+Therefore, the square root of 144 is 12.`
+
+  // Yield character by character for smoother animation
+  for (let i = 0; i < reasoning.length; i++) {
+    yield reasoning[i]
+    await new Promise((resolve) => setTimeout(resolve, 10))
+  }
+}
+
+export function ReasoningWithAIResponse() {
+  const [streamText, setStreamText] = useState<AsyncIterable<string> | null>(
+    null
+  )
+
+  useEffect(() => {
+    const stream = simulateStream()
+    setStreamText(stream)
+  }, [])
+
+  const handleRegenerate = () => {
+    const stream = simulateStream()
+    setStreamText(stream)
+  }
+
+  return (
+    <div className="flex w-full flex-col items-start gap-4">
+      <p className="text-base">The square root of 144 is 12.</p>
+
+      <Button variant="outline" size="sm" onClick={handleRegenerate}>
+        Generate Reasoning
+      </Button>
+      <Reasoning>
+        <ReasoningTrigger>Show AI reasoning</ReasoningTrigger>
+        <ReasoningContent>
+          {streamText ? (
+            <ReasoningResponse text={streamText} speed={40} />
+          ) : null}
+        </ReasoningContent>
+      </Reasoning>
+    </div>
+  )
+}
+
+```
 
 ### Controlled Component
 
 Control the open state programmatically for advanced use cases.
 
-The result of the calculation is 256.
+```
+"use client"
+
+import {
+  Reasoning,
+  ReasoningContent,
+  ReasoningResponse,
+  ReasoningTrigger,
+} from "@/components/prompt-kit/reasoning"
+import { Button } from "@/components/ui/button"
+import { useState } from "react"
+
+export function ReasoningControlled() {
+  const [isOpen, setIsOpen] = useState(false)
+
+  const reasoningText = `Here's how I calculated the result:
+
+1. Take the base number 2
+2. Calculate 2^8 = 2×2×2×2×2×2×2×2
+3. Result is 256`
+
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open)
+  }
+
+  return (
+    <div className="flex w-full flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <p className="text-base">The result of the calculation is 256.</p>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => handleOpenChange(!isOpen)}
+        >
+          {isOpen ? "Hide reasoning" : "Show reasoning"}
+        </Button>
+      </div>
+
+      <div className="rounded-md border p-4">
+        <Reasoning open={isOpen} onOpenChange={handleOpenChange}>
+          <div className="flex items-center justify-between">
+            <ReasoningTrigger>Toggle reasoning</ReasoningTrigger>
+            <p className="text-muted-foreground text-xs">
+              State: {isOpen ? "Open" : "Closed"}
+            </p>
+          </div>
+          <ReasoningContent className="mt-3">
+            <ReasoningResponse text={reasoningText} />
+          </ReasoningContent>
+        </Reasoning>
+      </div>
+    </div>
+  )
+}
+
+```
 
 ### Custom Styling
 
 Customize the appearance of the Reasoning component to match your application's design. You can also use markdown in the ReasoningResponse component to style the content.
 
-The most efficient algorithm for this problem is Quick Sort, with O(n log n) time complexity.
+```
+"use client"
 
+import {
+  Reasoning,
+  ReasoningContent,
+  ReasoningResponse,
+  ReasoningTrigger,
+} from "@/components/prompt-kit/reasoning"
+
+export function ReasoningWithCustomStyling() {
+  const reasoningText = `## Algorithm Selection Analysis
+
+I compared several sorting algorithms based on their time complexity:
+
+- **Bubble Sort:** O(n²) - Too inefficient for large datasets
+- **Merge Sort:** O(n log n) - Consistent but requires extra space
+- **Quick Sort:** O(n log n) average case - Best overall option
+- **Heap Sort:** O(n log n) - Good but typically slower than Quick Sort
+
+Quick Sort was selected because it offers excellent average-case performance, can be implemented with minimal extra space (in-place), and performs well on real-world data.
+
+\`\`\`js
+const quickSort = (arr) => {
+  if (arr.length <= 1) return arr;
+  const pivot = arr[Math.floor(arr.length / 2)];
+  const left = arr.filter(x => x < pivot);
+  const right = arr.filter(x => x > pivot);
+  return [...quickSort(left), pivot, ...quickSort(right)];
+}
+\`\`\`
+`
+
+  return (
+    <div className="min-h-[350px] w-full flex-col gap-4 bg-gradient-to-r from-purple-50 to-blue-50 p-6 dark:border-slate-700 dark:from-slate-900 dark:to-slate-800">
+      <p className="mb-4 text-base font-medium">
+        The most efficient algorithm for this problem is Quick Sort, with O(n
+        log n) time complexity.
+      </p>
+
+      <Reasoning className="w-full">
+        <ReasoningTrigger className="text-indigo-600 transition-colors hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300">
+          AI Reasoning Process
+        </ReasoningTrigger>
+
+        <ReasoningContent className="mt-4 rounded-md border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900">
+          <ReasoningResponse
+            text={reasoningText}
+            className="prose-h2:!mt-0 prose-h2:!scroll-m-0 prose-h2:!text-lg p-4 text-sm"
+            mode="typewriter"
+            speed={60}
+          />
+        </ReasoningContent>
+      </Reasoning>
+    </div>
+  )
+}
+
+```
 Installation
 ------------
 

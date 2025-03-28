@@ -14,42 +14,52 @@ Examples
 
 ### Basic Markdown
 
-Render basic Markdown with support for bold, italics, lists, code blocks and more.
+```
+"use client"
 
-Markdown Example
-----------------
+import { Markdown } from "@/components/prompt-kit/markdown"
 
-This is a **bold text** and this is an _italic text_.
+export function MarkdownBasic() {
+  const markdownContent = `
+# Markdown Example
 
-Lists
------
+This is a **bold text** and this is an *italic text*.
+
+## Lists
 
 ### Unordered List
-
-*   Item 1
-*   Item 2
-*   Item 3
+- Item 1
+- Item 2
+- Item 3
 
 ### Ordered List
+1. First item
+2. Second item
+3. Third item
 
-1.  First item
-2.  Second item
-3.  Third item
-
-Links and Images
-----------------
+## Links and Images
 
 [Visit Prompt Kit](mdc:https:/prompt-kit.com)
 
-Code
-----
+## Code
 
-Inline code example.
+Inline \`code\` example.
 
-```
+\`\`\`javascript
 // Code block example
 function greet(name) {
-  return `Hello, ${name}!`;
+  return \`Hello, \${name}!\`;
+}
+\`\`\`
+`
+
+  return (
+    <div className="w-full max-w-3xl">
+      <Markdown className="prose prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-h4:text-base prose-h5:text-sm prose-h6:text-xs">
+        {markdownContent}
+      </Markdown>
+    </div>
+  )
 }
 
 ```
@@ -59,31 +69,95 @@ function greet(name) {
 
 You can customize how different Markdown elements are rendered by providing custom components.
 
-Custom Components Example
--------------------------
+```
+"use client"
 
-Styled Headings
----------------
+import { Markdown } from "@/components/prompt-kit/markdown"
+import { cn } from "@/lib/utils"
+import { useState } from "react"
+import { Components } from "react-markdown"
+
+export function MarkdownCustomComponents() {
+  const [theme, setTheme] = useState<"light" | "dark">("light")
+
+  const markdownContent = `
+# Custom Components Example
+
+## Styled Headings
 
 ### This is a custom styled H3
 
-Custom Links
-------------
+## Custom Links
 
 [Click me to toggle theme](mdc:#)
 
-Custom Blockquotes
-------------------
+## Custom Blockquotes
 
-> This is a custom styled blockquote with multiple lines of text.
+> This is a custom styled blockquote
+> with multiple lines of text.
 
-Custom Lists
-------------
+## Custom Lists
 
-*   First item with custom styling
-*   Second item with custom styling
-*   Third item with custom styling
+- First item with custom styling
+- Second item with custom styling
+- Third item with custom styling
+`
 
+  const customComponents: Partial<Components> = {
+    h3: ({ children }) => (
+      <h3 className="my-4 text-xl font-bold text-blue-500">{children}</h3>
+    ),
+    a: ({ children, href }) => (
+      <a
+        href={href}
+        className="text-purple-500 underline hover:text-purple-700"
+        onClick={(e) => {
+          e.preventDefault()
+          setTheme((prev) => (prev === "light" ? "dark" : "light"))
+        }}
+      >
+        {children}
+      </a>
+    ),
+    blockquote: ({ children }) => (
+      <blockquote className="my-4 border-l-4 border-green-500 pl-4 italic">
+        {children}
+      </blockquote>
+    ),
+    li: ({ children }) => (
+      <li className="my-1 flex items-center">
+        <span className="mr-2 inline-block h-2 w-2 rounded-full bg-orange-500"></span>
+        <span>{children}</span>
+      </li>
+    ),
+  }
+
+  return (
+    <div
+      className={cn(
+        "w-full max-w-3xl rounded-lg p-6 transition-colors",
+        theme === "light" ? "bg-white text-black" : "bg-black text-white"
+      )}
+    >
+      <div className="mb-4 flex justify-end">
+        <button
+          onClick={() =>
+            setTheme((prev) => (prev === "light" ? "dark" : "light"))
+          }
+          className={cn(
+            "rounded px-3 py-1 text-sm",
+            theme === "light" ? "bg-gray-200" : "bg-gray-900"
+          )}
+        >
+          Toggle {theme === "light" ? "Dark" : "Light"} Mode
+        </button>
+      </div>
+      <Markdown components={customComponents}>{markdownContent}</Markdown>
+    </div>
+  )
+}
+
+```
 Installation
 ------------
 

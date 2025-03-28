@@ -1,6 +1,11 @@
 ---
 description: 
 globs: 
+alwaysApply: false
+---
+---
+description: 
+globs: 
 alwaysApply: true
 ---
 # prompt-kit
@@ -15,21 +20,164 @@ Examples
 ### Typewriter Mode
 
 The default mode that types out text character by character, simulating a typing effect.
+```
+import { ResponseStream } from "@/components/prompt-kit/response-stream"
 
+export function ResponseStreamTypewriter() {
+  const text = `This text is being typed out character by character, simulating a typewriter effect. This is the default mode of the ResponseStream component. You can use speed to control the speed or as to control the rendering element. Or onComplete to run a function when the text is fully typed. Check the other props too!
+    `
+
+  return (
+    <div className="w-full min-w-full">
+      <ResponseStream
+        textStream={text}
+        mode="typewriter"
+        speed={20}
+        className="text-sm"
+      />
+    </div>
+  )
+}
+
+```
 ### Fade Mode
 
 The fade mode reveals text word by word with a smooth fade-in animation.
+```
+import { ResponseStream } from "@/components/prompt-kit/response-stream"
 
+export function ResponseStreamFade() {
+  const text = `This text is fading in word by word. The fade mode creates a smooth and elegant text reveal. You can customize the fadeDuration but also the segmentDelay to control the speed of the animation.`
+
+  return (
+    <div className="w-full min-w-full">
+      <ResponseStream
+        textStream={text}
+        mode="fade"
+        className="text-sm"
+        fadeDuration={1200}
+      />
+    </div>
+  )
+}
+
+```
 ### With Markdown
 
 ResponseStream can be combined with the Markdown component to create rich, animated content, for that you need to use the `useTextStream` hook directly.
 
 Note: If you want to use mode="fade", you need to manually render the segments with appropriate CSS animations. It can be hard to get it done with markdown, the way is to write a custom `remarkPlugins`. We have a demo but it's a bit too experimental to be included here, happy to receive a PR if you have a good solution.
+```
+"use client"
 
+import { Markdown } from "@/components/prompt-kit/markdown"
+import { useTextStream } from "@/components/prompt-kit/response-stream"
+import { useEffect } from "react"
+
+export function ResponseStreamWithMarkdown() {
+  const markdownText = `## Streaming Markdown
+
+This example shows how to combine **useTextStream** with *Markdown* rendering.
+
+- The text is processed by useTextStream
+- Then rendered directly with Markdown
+- Perfect for AI responses with formatting
+
+\`\`\`js
+// Code blocks work too!
+function example() {
+  return "Hello world";
+}
+\`\`\`
+`
+
+  const { displayedText, startStreaming } = useTextStream({
+    textStream: markdownText,
+    mode: "typewriter",
+    speed: 30,
+  })
+
+  useEffect(() => {
+    startStreaming()
+  }, [startStreaming])
+
+  return (
+    <div className="w-full min-w-full">
+      <Markdown className="prose prose-sm dark:prose-invert prose-h2:!mt-0 prose-h2:!scroll-m-0">
+        {displayedText}
+      </Markdown>
+    </div>
+  )
+}
+
+```
 ### Using the useTextStream Hook with fade mode
 
 When using the useTextStream hook with `fade` mode, you need to manually render the segments with appropriate CSS animations.
+```
+"use client"
 
+import { useTextStream } from "@/components/prompt-kit/response-stream"
+import { cn } from "@/lib/utils"
+
+export function UseTextStreamExample() {
+  const text = `This example demonstrates direct use of the useTextStream hook with fade animation. Each word fades in sequentially, creating a smooth reading experience. The hook doesn't interfere with the UI rendering, so you can use it in combination with other components. You can customize the fadeIn effect as you want. You can use getFadeDuration or getSegmentDelay to control the animation speed. Or you can just set speed and control everything with CSS.`
+
+  const { segments } = useTextStream({
+    textStream: text,
+    mode: "fade",
+    speed: 100,
+  })
+
+  // For fade mode, we need to manually create the CSS and render the segments.
+  const fadeStyle = `
+    @keyframes fadeIn {
+      from { opacity: 0; filter: blur(2px); }
+      to { opacity: 1; filter: blur(0px); }
+    }
+    
+    .custom-fade-segment {
+      display: inline-block;
+      opacity: 0;
+      animation: fadeIn 1000ms ease-out forwards;
+    }
+
+    .custom-fade-segment-space {
+      white-space: pre;
+    }
+  `
+
+  return (
+    <div className="w-full min-w-full">
+      <style>{fadeStyle}</style>
+
+      <div className="min-h-[100px] rounded-md p-4 text-sm">
+        <div className="relative">
+          {segments.map((segment, idx) => {
+            const isWhitespace = /^\s+$/.test(segment.text)
+
+            return (
+              <span
+                key={`${segment.text}-${idx}`}
+                className={cn(
+                  "custom-fade-segment",
+                  isWhitespace && "custom-fade-segment-space"
+                )}
+                style={{
+                  animationDelay: `${idx * 2}ms`,
+                }}
+              >
+                {segment.text}
+              </span>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+```
 Installation
 ------------
 
